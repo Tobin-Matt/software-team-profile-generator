@@ -5,39 +5,11 @@ const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
 
-
-// functions below are to run the menu prompt from inquirer
-const initPrompts = () => {
-    inquirer.prompt([
-        {
-            type: 'list',
-            message: 'What type of employee would you like to add to the team?',
-            name: 'menu',
-            choices: ['Manager', 'Engineer', 'Intern', 'No additional members to add.'],
-        }
-    ])
-    .then((selection) => {
-        switch(selection.menu) {
-            case 'Manager':
-                promptManager();
-                break;
-            case 'Engineer':
-                promptEngineer();
-                break;
-            case 'Intern':
-                promptIntern();
-                break;
-
-            default: 'No additional members to add.'
-                // createPage();
-        }
-    })
-}
-
 //empty array to hold the employess that will be added to the page
 const employeeArray = [];
 
-let promptManager = () => {
+// functions below are to run the menu prompt from inquirer
+const initPrompts = () => {
     inquirer.prompt([
         {
             type: 'input',
@@ -67,8 +39,33 @@ let promptManager = () => {
         const manager = new Manager(name, id, email, officeNum);
         employeeArray.push(manager);
         console.log(employeeArray);
-        initPrompts();
+        addEmployees();
     });
+}
+
+
+let addEmployees = () => {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: 'What type of employee would you like to add to the team?',
+            name: 'menu',
+            choices: ['Engineer', 'Intern', 'No additional members to add.'],
+        }
+    ])
+    .then((selection) => {
+        switch(selection.menu) {
+            case 'Engineer':
+                promptEngineer();
+                break;
+            case 'Intern':
+                promptIntern();
+                break;
+
+            default: 'No additional members to add.'
+                // createPage();
+        }
+    })
 }
 
 const promptEngineer = () => {
@@ -96,9 +93,10 @@ const promptEngineer = () => {
     ])
     .then((answers) => {
         //generate cards for engineer
-        const engineer = new Engineer(answers.name, answers.id, answers.email, answers.github);
+        const { name, id, email, github } = answers;
+        const engineer = new Engineer(name, id, email, github);
         employeeArray.push(engineer);
-        initPrompts();
+        addEmployees();
     });
 }
 
@@ -127,9 +125,10 @@ const promptIntern = () => {
     ])
     .then((answers) => {
         //generate cards for intern
-        const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
+        const { name, id, email, school } = answers;
+        const intern = new Intern(name, id, email, school);
         employeeArray.push(intern);
-        initPrompts();
+        addEmployees();
     });
 }
 
