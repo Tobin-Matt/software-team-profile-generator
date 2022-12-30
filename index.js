@@ -1,11 +1,10 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const Employee = require('./lib/employee');
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
 
-//empty array to hold the employess that will be added to the page
-const employeeArray = [];
 
 // functions below are to run the menu prompt from inquirer
 const initPrompts = () => {
@@ -18,9 +17,6 @@ const initPrompts = () => {
         }
     ])
     .then((selection) => {
-        if(selection.menu == 'Manager') {
-            promptManager();
-        }
         switch(selection.menu) {
             case 'Manager':
                 promptManager();
@@ -31,13 +27,17 @@ const initPrompts = () => {
             case 'Intern':
                 promptIntern();
                 break;
-            default: 
-                createPage();
+
+            default: 'No additional members to add.'
+                // createPage();
         }
     })
 }
 
-const promptManager = () => {
+//empty array to hold the employess that will be added to the page
+const employeeArray = [];
+
+let promptManager = () => {
     inquirer.prompt([
         {
             type: 'input',
@@ -63,8 +63,10 @@ const promptManager = () => {
     .then((answers) => {
         //generate cards for manager
         // const htmlContent = createHtml(answers);
-        const manager = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
+        const { name, id, email, officeNum } = answers;
+        const manager = new Manager(name, id, email, officeNum);
         employeeArray.push(manager);
+        console.log(employeeArray);
         initPrompts();
     });
 }
@@ -131,14 +133,13 @@ const promptIntern = () => {
     });
 }
 
-const createPage = () => {
-    fs.writeFile('./dist/index.html', htmlContent, (err) => 
-    err ? console.log(err) : console.log('HTML page created!')
-    );
-}
+// const createPage = () => {
+//     fs.writeFile('./dist/index.html', htmlContent, (err) => 
+//     err ? console.log(err) : console.log('HTML page created!')
+//     );
+// }
 
 initPrompts();
-
 
 // const createHtml = ({name, id, email, github}) =>
 // `<!DOCTYPE html>
