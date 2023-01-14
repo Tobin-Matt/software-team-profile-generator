@@ -1,14 +1,16 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const path = require('path');
 const Employee = require('./lib/employee');
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
+const generateHTML = require('./src/html-template');
 
 //empty array to hold the employess that will be added to the page
 const employeeArray = [];
 
-// functions below are to run the menu prompt from inquirer
+// will prompt user to add Manager info
 const initPrompts = () => {
     inquirer.prompt([
         {
@@ -34,17 +36,18 @@ const initPrompts = () => {
     ])
     .then((answers) => {
         //generate cards for manager
-        // const htmlContent = createHtml(answers);
         const { name, id, email, officeNum } = answers;
         const manager = new Manager(name, id, email, officeNum);
         employeeArray.push(manager);
-        console.log(employeeArray);
+        // console.log(employeeArray);
+
+        // then run the menu to ask user to add Engineer or Intern
         addEmployees();
     });
 }
 
 
-let addEmployees = () => {
+const addEmployees = () => {
     inquirer.prompt([
         {
             type: 'list',
@@ -63,7 +66,7 @@ let addEmployees = () => {
                 break;
 
             default: 'No additional members to add.'
-                // createPage();
+                createPage();
         }
     })
 }
@@ -96,6 +99,7 @@ const promptEngineer = () => {
         const { name, id, email, github } = answers;
         const engineer = new Engineer(name, id, email, github);
         employeeArray.push(engineer);
+        // console.log(employeeArray);
         addEmployees();
     });
 }
@@ -128,51 +132,15 @@ const promptIntern = () => {
         const { name, id, email, school } = answers;
         const intern = new Intern(name, id, email, school);
         employeeArray.push(intern);
+        // console.log(employeeArray);
         addEmployees();
     });
 }
 
-// const createPage = () => {
-//     fs.writeFile('./dist/index.html', htmlContent, (err) => 
-//     err ? console.log(err) : console.log('HTML page created!')
-//     );
-// }
+const createPage = () => {
+    fs.writeFile('./dist/index.html', generateHTML(employeeArray), (err) => 
+    err ? console.log(err) : console.log('HTML page created!')
+    );
+}
 
 initPrompts();
-
-// const createHtml = ({name, id, email, github}) =>
-// `<!DOCTYPE html>
-// <html lang="en">
-// <head>
-//     <meta charset="UTF-8">
-//     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-//     <title>Team Page</title>
-// </head>
-// <body>
-//     <nav class="navbar navbar-light bg-light">
-//         <div class="container-fluid">
-//           <span class="navbar-brand mb-0 h1">Team Page</span>
-//         </div>
-//       </nav>
-
-//     <div class="card" style="width: 18rem;">
-//         <div class="card-body">
-//           <h5 class="card-title">${name}</h5>
-//           <p class="card-text">Engineer</p>
-//         </div>
-//         <ul class="list-group list-group-flush">
-//           <li class="list-group-item">${id}</li>
-//           <li class="list-group-item">
-//             <a href="#" class="card-link">${email}</a>
-//           </li>
-//           <li class="list-group-item">
-//             <a href="https://github.com/${github}" class="card-link">${github}</a>
-//           </li>
-//         </ul>
-//       </div>
-
-//     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-// </body>
-// </html>`

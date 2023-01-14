@@ -1,5 +1,105 @@
+const generateTeam = (employees) => {
+  const generateManager = (manager) => {
+    return `
+    <div class="card m-3 shadow-lg border border-dark" style="width: 18rem;">
+      <div class="card-body bg-info">
+        <h5 class="card-title">${manager.getName()}</h5>
+        <p class="card-text">${manager.getRole()}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">ID: ${manager.getId()}</li>
+        <li class="list-group-item">
+        <span>Email: </span>
+        <a href="mailto: ${manager.getEmail()}" class="card-link">${manager.getEmail()}</a>
+        </li>
+        <li class="list-group-item">
+          <p class="card-link">Office Number: ${manager.getOfficeNumber()}</p>
+        </li>
+      </ul>
+    </div>
+    `
+  }
 
-const htmlContent = employees => {
+  const generateEngineer = (engineer) => {
+    return `
+    <div class="card m-3 shadow-lg border border-dark" style="width: 18rem;">
+      <div class="card-body bg-info">
+        <h5 class="card-title">${engineer.getName()}</h5>
+        <p class="card-text">${engineer.getRole()}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">ID: ${engineer.getId()}</li>
+        <li class="list-group-item">
+          <span>Email: </span>
+          <a href="mailto: ${engineer.getEmail()}" class="card-link">${engineer.getEmail()}</a>
+        </li>
+        <li class="list-group-item">
+          <span>GitHub: </span>
+          <a href="https://github.com/${engineer.getGithub()}" class="card-link">${engineer.getGithub()}</a>
+        </li>
+      </ul>
+    </div>
+    `
+  }
+
+  const generateIntern = (intern) => {
+    return `
+    <div class="card m-3 shadow-lg border border-dark" style="width: 18rem;">
+      <div class="card-body bg-info">
+        <h5 class="card-title">${intern.getName()}</h5>
+        <p class="card-text">${intern.getRole()}</p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">ID: ${intern.getId()}</li>
+        <li class="list-group-item">
+          <span>Email: </span>
+          <a href="mailto: ${intern.getEmail()}" class="card-link">${intern.getEmail()}</a>
+        </li>
+        <li class="list-group-item">
+          <p class="card-link">School: ${intern.getSchool()}</p>
+        </li>
+      </ul>
+    </div>
+    `
+  }
+
+  const cardsArray = [];
+
+  // for (let i = 0; i < employees.length; i++) {
+  //   if(employees[i].getRole() === 'Manager') {
+  //     const newManager = generateManager(employees[i]);
+  //     cardsArray.push(newManager);
+  //   } else if (employees[i].getRole() === 'Engineer') {
+  //     const newEngineer = generateEngineer(employees[i]);
+  //     cardsArray.push(newEngineer);
+  //   } else {
+  //     const newIntern = generateIntern(employees[i]);
+  //     cardsArray.push(newIntern);
+  //   }
+  // }
+
+  cardsArray.push(
+    employees
+    .filter((employee) => employee.getRole() === 'Manager')
+    .map((manager) => generateManager(manager))
+    );
+
+  cardsArray.push(
+    employees
+    .filter((employee) => employee.getRole() === 'Engineer')
+    .map((engineer) => generateEngineer(engineer)).join('')
+    );
+
+  cardsArray.push(
+    employees
+    .filter((employee) => employee.getRole() === 'Intern')
+    .map((intern) => generateIntern(intern)).join('')
+    );
+
+  return cardsArray.join('')
+}
+
+module.exports = (employees) => {
   return `
   <!DOCTYPE html>
   <html lang="en">
@@ -11,30 +111,14 @@ const htmlContent = employees => {
       <title>Team Page</title>
   </head>
   <body>
-      <nav class="navbar navbar-light bg-info mb-5">
+      <nav class="navbar navbar-light bg-dark mb-5">
           <div class="container-fluid d-flex justify-content-center">
-            <span class="navbar-brand m-4 fs-2 h1">Team Page</span>
+            <span class="navbar-brand text-white m-4 fs-2 h1">Team Page</span>
           </div>
         </nav>
       
       <div class="d-flex justify-content-center flex-wrap">
-        <!-- cards below to be generated from javascript file -->
-        <div class="card m-3" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">Employee Name</h5>
-            <p class="card-text">Job Title</p>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">Employee ID</li>
-            <li class="list-group-item">
-              <a href="#" class="card-link">Email link</a>
-            </li>
-            <li class="list-group-item">
-              <a href="#" class="card-link">GitHub link</a>
-            </li>
-          </ul>
-        </div>
-        ${generateTeam()}
+        ${generateTeam(employees)}
       </div>
   
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
@@ -43,4 +127,3 @@ const htmlContent = employees => {
   `
 }
 
-module.exports = htmlContent;
