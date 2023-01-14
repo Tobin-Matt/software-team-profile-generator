@@ -1,3 +1,4 @@
+//parent function that holds the different dynamically generated employee cards
 const generateTeam = (employees) => {
   const generateManager = (manager) => {
     return `
@@ -63,21 +64,10 @@ const generateTeam = (employees) => {
     `
   }
 
+  //empty array to push each added employee card
   const cardsArray = [];
 
-  // for (let i = 0; i < employees.length; i++) {
-  //   if(employees[i].getRole() === 'Manager') {
-  //     const newManager = generateManager(employees[i]);
-  //     cardsArray.push(newManager);
-  //   } else if (employees[i].getRole() === 'Engineer') {
-  //     const newEngineer = generateEngineer(employees[i]);
-  //     cardsArray.push(newEngineer);
-  //   } else {
-  //     const newIntern = generateIntern(employees[i]);
-  //     cardsArray.push(newIntern);
-  //   }
-  // }
-
+  //functional loops below will push a certain employee card based on the users input
   cardsArray.push(
     employees
     .filter((employee) => employee.getRole() === 'Manager')
@@ -99,6 +89,7 @@ const generateTeam = (employees) => {
   return cardsArray.join('')
 }
 
+//export the template literal that holds the html structure to create the page
 module.exports = (employees) => {
   return `
   <!DOCTYPE html>
@@ -126,4 +117,3 @@ module.exports = (employees) => {
   </html>
   `
 }
-
